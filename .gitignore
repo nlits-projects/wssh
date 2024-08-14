@@ -1,0 +1,23 @@
+nimcache/
+nimblecache/
+htmldocs/
+
+# Binary
+*
+!/**/
+!*.*
+*.bin
+
+*.exe
+
+# Replit
+nimv.txt
+nimble-env/
+BOOTLOG
+**/*.nix
+*.replit
+.cache/
+boot.sh
+
+# Files
+nimble.paths

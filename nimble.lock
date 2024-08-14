@@ -1,0 +1,82 @@
+{
+  "version": 2,
+  "packages": {
+    "asynctools": {
+      "version": "0.1.1",
+      "vcsRevision": "0e6bdc3ed5bae8c7cc9e03cfbf66b7c882a908a7",
+      "url": "https://github.com/cheatfate/asynctools",
+      "downloadMethod": "git",
+      "dependencies": [],
+      "checksums": {
+        "sha1": "54314dceabb06b20908ecb0f2c007e9ff3aaa054"
+      }
+    },
+    "cligen": {
+      "version": "1.7.3",
+      "vcsRevision": "0e7b3b3a1fa77c448d3681c5fdf85197844cb7e4",
+      "url": "https://github.com/c-blake/cligen.git",
+      "downloadMethod": "git",
+      "dependencies": [],
+      "checksums": {
+        "sha1": "5a082835594887c0fdaea17dbfd2d3a2e744a2a9"
+      }
+    },
+    "httpbeast": {
+      "version": "0.4.1",
+      "vcsRevision": "abc13d11c210b614960fe8760e581d44cfb2e3e9",
+      "url": "https://github.com/dom96/httpbeast",
+      "downloadMethod": "git",
+      "dependencies": [
+        "asynctools"
+      ],
+      "checksums": {
+        "sha1": "b23e57a401057dcb9b7fae1fb8279a6a2ce1d0b8"
+      }
+    },
+    "jester": {
+      "version": "0.6.0",
+      "vcsRevision": "2dfac077170c62cd6ffc73e3dcfa29d29c641dcf",
+      "url": "https://github.com/dom96/jester/",
+      "downloadMethod": "git",
+      "dependencies": [
+        "httpbeast"
+      ],
+      "checksums": {
+        "sha1": "4834f85e61ae39f6b6acfb74d3bbba62d8779b66"
+      }
+    },
+    "libssh2": {
+      "version": "0.1.8",
+      "vcsRevision": "2ca912809729a1df5be49727d08d390b4f8cdb50",
+      "url": "https://github.com/ba0f3/libssh2.nim",
+      "downloadMethod": "git",
+      "dependencies": [],
+      "checksums": {
+        "sha1": "b4d57fd9b1fa1834a8a9c4df156d6630023a539f"
+      }
+    },
+    "ssh2": {
+      "version": "0.1.8",
+      "vcsRevision": "11c1cf8dc46bae4e08df0f724eb05716bbc7ff6d",
+      "url": "https://github.com/ba0f3/ssh2.nim",
+      "downloadMethod": "git",
+      "dependencies": [
+        "libssh2"
+      ],
+      "checksums": {
+        "sha1": "12474a309203e70b6b38a9e410bba047497d0a06"
+      }
+    },
+    "ws": {
+      "version": "0.5.0",
+      "vcsRevision": "9536bf99ddf5948db221ccb7bb3663aa238a8e21",
+      "url": "https://github.com/treeform/ws",
+      "downloadMethod": "git",
+      "dependencies": [],
+      "checksums": {
+        "sha1": "ae4daf4ae302d0431f3c2d385ae9d2fe767a3246"
+      }
+    }
+  },
+  "tasks": {}
+}
