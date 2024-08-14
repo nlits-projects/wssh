@@ -1,6 +1,7 @@
 from macros import getProjectPath
 import os
-
   
 proc getStaticPath*(): string =
-  return absolutePath(getProjectPath() / "public")
+  const prj = getProjectPath()
+  result = absolutePath(prj / "public")
+  echo result

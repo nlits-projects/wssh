@@ -5,8 +5,10 @@ author        = "thatrandomperson5"
 description   = "Web UI for backend SSH connecitons."
 license       = "GPL-3.0-only"
 srcDir        = "src"
+binDir        = "builds"
 bin           = @["wssh"]
-
+installDirs   = @["public"]
+installExt    = @["nims"]
 
 # Dependencies
 
