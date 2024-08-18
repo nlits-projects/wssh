@@ -21,3 +21,4 @@ boot.sh
 
 # Files
 nimble.paths
+nimble.develop

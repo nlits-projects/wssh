@@ -1,7 +1,6 @@
 import jester, cligen
 import routers, utils
 
-type WsshMode {.pure.} = enum MultiProxy, Direct 
 
 proc wssh(mode=WsshMode.Direct, jport=80, jbindAddr="localhost", jreusePort=false, jnumThreads=0) =
   let port = Port(jport)
