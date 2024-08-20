@@ -1,5 +1,5 @@
-import jester, cligen
-import routers, utils
+import jester
+import directRouter, utils
 
 
 proc wssh(mode=WsshMode.Direct, jport=80, jbindAddr="localhost", jreusePort=false, jnumThreads=0) =
@@ -11,7 +11,7 @@ proc wssh(mode=WsshMode.Direct, jport=80, jbindAddr="localhost", jreusePort=fals
 
   case mode
   of Direct:
-    jester = initJester(directRouter, settings=settings)
+    jester = initJester(direct, settings=settings)
   of MultiProxy:
     discard
 

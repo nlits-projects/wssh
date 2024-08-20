@@ -1,7 +1,7 @@
 import std/[osproc, asyncdispatch, streams]
 
 
-type CallbackProc* = proc (s: string): Future[void] {.closure.}
+type CallbackProc* = proc (s: string): Future[void] {.closure, gcsafe.}
 
 #[]
 
@@ -13,7 +13,7 @@ proc asyncWaitProcess*(p: Process, delay=10): Future[int] {.async.} =
 ]#
 
 proc asyncHandleProcess*(p: Process, 
-  stdoutHandle, stderrHandle: CallbackProc, delay=10): Future[int] {.async.} =
+  stdoutHandle, stderrHandle: CallbackProc, delay=10): Future[int] {.async, gcsafe.} =
     ## Waits until process p finishes while sending any new data in stdout or stderr to it's respective handles.
     ## Checks for updates every delay (ms). To register a new one every cycle set delay to 1
 
@@ -34,4 +34,8 @@ proc asyncHandleProcess*(p: Process,
       await stderrHandle(serr.readAll)
 
     return p.peekExitCode()
-  
+
+
+proc asyncWriteIn*(p: Process, s: string) {.async.} =
+  let stream = p.inputStream
+  stream.write(s)
