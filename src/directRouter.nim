@@ -1,6 +1,6 @@
 import jester, ws, ws/jester_extra, asyncshell, packets, utils
 
-import std/[osproc, macros]
+import std/[osproc, macros, logging]
 
 
 
@@ -150,7 +150,6 @@ proc directWsHandle(ws: WebSocket) {.async.} =
 
 
 
-
 router direct:
   get "/hello":
     resp "<h1>Hello World!</h1>"
@@ -158,7 +157,42 @@ router direct:
   get "/ws":
     var ws = await newWebSocket(request)
     await ws.sendActionPacket(newInitPacket(WsshMode.Direct))
+
+    # Handle connection
     await directWsHandle(ws)
 
+  
+  # Handle errors
+  error WebSocketClosedError:
+    let message = "Websocket Closed: " & exception.msg & " [Non-Resumable]"
+    logging.error(message)
+    respErr Http410, message # Connection GONE
+
+  error WebSocketProtocolMismatchError:
+    let message = "Socket tried to use an unknown protocol: " & exception.msg
+    logging.error(message)
+    respErr Http400, message # Upgrade to http
+
+  error WebSocketHandshakeError:
+    let message = "Socket handshake failed: " & exception.msg
+    logging.error(message)
+    respErr Http400, message
+
+  error WebSocketPacketTypeError:
+    let message = "WSSH pakcet type error: " & exception.msg
+    logging.error(message)
+    respErr Http400, message
+
+  error WebSocketError:
+    let message = $exception.name & ": " & exception.msg
+    logging.error(message)
+    respErr Http500, message
+
+  error Http404:
+    respErr Http404, "Couldn't find webpage."
+
+  error Http500:
+    respErr Http500, "A internal server error occured."
+      
 
 export direct

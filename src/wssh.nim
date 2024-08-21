@@ -2,6 +2,7 @@ import jester
 import directRouter, utils
 
 
+
 proc wssh(mode=WsshMode.Direct, jport=80, jbindAddr="localhost", jreusePort=false, jnumThreads=0) =
   let port = Port(jport)
   let settings = newSettings(port=port, # appName="wssh", # Apparently appName is deprecated in the http spec
@@ -12,6 +13,7 @@ proc wssh(mode=WsshMode.Direct, jport=80, jbindAddr="localhost", jreusePort=fals
   case mode
   of Direct:
     jester = initJester(direct, settings=settings)
+
   of MultiProxy:
     discard
 
