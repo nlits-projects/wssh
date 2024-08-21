@@ -2,7 +2,7 @@
 
 version       = "0.1.0"
 author        = "thatrandomperson5"
-description   = "Web UI for backend SSH connecitons."
+description   = "Web UI for backend SSH connections."
 license       = "GPL-3.0-only"
 srcDir        = "src"
 binDir        = "builds"

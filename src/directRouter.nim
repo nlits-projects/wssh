@@ -112,9 +112,12 @@ proc directWsHandle(ws: WebSocket) {.async.} =
       let command = packet.command
       currentCommand = command
 
-      currentProcess = startProcess(command, options={poUsePath, poEvalCommand, poInteractive}) # Start process. Args is unused because of poEvalCommand
+      # Start process. Args is unused because of poEvalCommand
+      {.gcsafe.}: # Safe. When threads are enabled it is a gcsafe threadvar.
+        let workingDir = wsshConf.shellWorkingDir
+      currentProcess = startProcess(command, options={poUsePath, poEvalCommand, poInteractive}, workingDir=workingDir) 
 
-      asyncCheck directRunCallback()() # Run the command
+      asyncCheck directRunCallback()() # Handle the process and exit of that process
 
     of pkClose:
       if currentProcess.isNil: # No current process
