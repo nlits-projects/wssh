@@ -1,5 +1,5 @@
 import jester
-import directRouter, utils
+import backend/[directRouter, utils]
 import std/logging
 
 

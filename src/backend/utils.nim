@@ -33,9 +33,7 @@ else:
   
 proc getStaticPath*(): string =
   ## Get static file path for final executable
-  const prj = getProjectPath()
-  result = absolutePath(prj / "public")
-  echo result
+  return "./public"
 
 
 import karax / [karaxdsl, vdom, vstyles]

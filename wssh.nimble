@@ -9,6 +9,12 @@ binDir        = "builds"
 bin           = @["wssh"]
 installDirs   = @["public"]
 installExt    = @["nims"]
+skipFiles     = @["public/test.html", "public/static/test.nim.js"]
+
+# Tasks
+
+task buildTestFrontend, "build test js":
+  exec "nim js -o:\"public/static/test.nim.js\" src/frontend/test.nim"
 
 # Dependencies
 
