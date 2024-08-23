@@ -1,4 +1,4 @@
-from macros import getProjectPath
+# from macros import getProjectPath
 import std/[os, logging], jester
 
 
@@ -33,7 +33,8 @@ else:
   
 proc getStaticPath*(): string =
   ## Get static file path for final executable
-  return "./public"
+  result = currentSourcePath().parentDir.parentDir.parentDir / "public"
+  echo result
 
 
 import karax / [karaxdsl, vdom, vstyles]

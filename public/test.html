@@ -10,7 +10,18 @@
 
   </head>
   <body>
-    <div></div>
+    <h1>WSSH</h1>
+    <p>Status: <span id="status"></span></p>
+    
+    <pre><code id="output"></code></pre>
+    
+    <div style="display: inline-block;">
+      <input id="input" type="text" autocomplete="off" autocorrect="false">
+      <button id="input-button">&gt;&gt;</button>
+      <button id="kill">Kill</button>
+    </div>
+    
+    <pre id="error" style="color: red;"></pre>
     <script src="/static/test.nim.js"></script>
   </body>
 </html>

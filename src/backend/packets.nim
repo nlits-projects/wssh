@@ -1,4 +1,8 @@
-import flatty, utils
+import flatty
+when defined(js):
+  type WsshMode* {.pure.} = enum MultiProxy, Direct # Wssh mode enum. No import of js unsafe file.
+else:
+  from utils import WsshMode
 
 type
   PacketKind* = enum pkInit, pkClose, pkRun, pkByteUpdate, pkFinish, pkConfirmAction, pkInput
@@ -36,6 +40,11 @@ proc newInitPacket*(mode: WsshMode): Packet =
   # Process is unused
   result = Packet(kind: pkInit, mode: mode)
 
+proc newInputPacket*(input: string): Packet =
+  result = Packet(kind: pkInput, input: input)
+
+proc newRunPacket*(cmd: string): Packet =
+  result = Packet(kind: pkRun, command: cmd)
 
 # Packet convertors
 

@@ -76,9 +76,16 @@ template directRunCallback(): untyped =
     let stdoutHandle = stdoutCallback()
     let stderrHandle = stdoutCallback(true)
 
+    # init, convey that the command has started for commands with no text output
+    let initPacket = ctxCheck(newByteUpdatePacket, "", false)
+    await ws.sendActionPacket(initPacket)
+
+    # handle
     let exitCode = await currentProcess.asyncHandleProcess(stdoutHandle, stderrHandle)
     let packet = ctxCheck(newFinishPacket, exitCode)
     await ws.sendActionPacket(packet)
+    # Cleanup
+    currentProcess = nil
 
 
 
@@ -100,17 +107,27 @@ proc directWsHandle(ws: WebSocket) {.async.} =
 
   while ws.readyState == Open:
     let packet = await ws.recvPacket()
-
+    logging.debug($packet) # debug
 
     # Main packet handle
 
     case packet.kind # Packets server accepts: Close, Run, Input
     of pkRun:
       if packet.processID != -1:
+        logging.warn("ClientError: Inccorrect client packet structure. [-> Server]")
         ws.close() # Error out
         break
+      if currentProcess != nil:
+        logging.warn("ClientError: Process in progress. [-> Server]")
+        ws.close() # Error out
+        break
+       
       let command = packet.command
       currentCommand = command
+
+      # Presend before we lose track of the callback
+      let confirmationPacket = ctxCheck(newConfirmActionPacket, packet.kind)
+      await ws.send(confirmationPacket.renderBin, Opcode.Binary)
 
       # Start process. Args is unused because of poEvalCommand
       {.gcsafe.}: # Safe. When threads are enabled it is a gcsafe threadvar.
@@ -119,17 +136,23 @@ proc directWsHandle(ws: WebSocket) {.async.} =
 
       asyncCheck directRunCallback()() # Handle the process and exit of that process
 
+
+      continue # Skip confirmation
+
     of pkClose:
       if currentProcess.isNil: # No current process
+        logging.warn("ClientError: No process to close. [-> Server]")
         ws.close() # Error to client
         break
       currentProcess.terminate() # Ctrl-c sends terminate
 
     of pkInput:
       if packet.processID != -1:
+        logging.warn("ClientError: Inccorrect client packet structure. [-> Server]")
         ws.close() # Error out. Only the server should be sending process, command, etc.
         break
       if currentProcess.isNil: # No current process
+        logging.warn("ClientError: No process to input to. [-> Server]")
         ws.close() # Error to client
         break
 
@@ -138,11 +161,13 @@ proc directWsHandle(ws: WebSocket) {.async.} =
 
     of pkConfirmAction:
       # Confirm action should only be sent to confirm an action.
+      logging.warn("ClientError: Unchecked confirm packet [-> Server]")
       ws.close() # Error codes and message have not yet been added to ws, I will add them later.
       break
 
     else:
       # These packets were not meant to be sent to the server
+      logging.warn("ClientError: Improper packet kind " & $packet.kind & " [-> Server]")
       ws.close() # Error
       break
 
@@ -151,7 +176,7 @@ proc directWsHandle(ws: WebSocket) {.async.} =
     await ws.send(confirmationPacket.renderBin, Opcode.Binary)
 
 
-
+   
 
 router direct:
   get "/hello":
@@ -163,6 +188,9 @@ router direct:
 
     # Handle connection
     await directWsHandle(ws)
+
+    # Handle complaints
+    respErr Http400, "Bad packet sent."
 
   
   # Handle errors
