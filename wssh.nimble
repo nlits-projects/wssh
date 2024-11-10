@@ -6,7 +6,12 @@ description   = "Web UI for backend SSH connections."
 license       = "GPL-3.0-only"
 srcDir        = "src"
 binDir        = "builds"
-bin           = @["wssh"]
+
+when defined(release):
+  bin         = @["wssh"]
+else:
+  bin         = @["wssh", "wsshprintpacket"]
+  
 installDirs   = @["public"]
 installExt    = @["nims"]
 skipFiles     = @["public/test.html", "public/static/test.nim.js"]
